@@ -14,6 +14,7 @@ export interface MenuItem {
   price: number;
   category: string;
   available: boolean;
+  stock: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -67,6 +68,7 @@ export interface CreateMenuItemInput {
   price: number;
   category: string;
   available?: boolean;
+  stock?: number | null;
 }
 
 export interface UpdateMenuItemInput {
@@ -75,6 +77,7 @@ export interface UpdateMenuItemInput {
   price?: number;
   category?: string;
   available?: boolean;
+  stock?: number | null;
 }
 
 export interface CreateOrderInput {

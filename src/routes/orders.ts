@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { TenantRequest, Order, CreateOrderInput, OrderItem } from '../types.js';
 import { db } from '../db.js';
 import { sendOrderConfirmation } from '../services/notifications.js';
+import { checkStock, reserveStock, commitReservation, releaseReservation } from '../services/inventory.js';
 
 const router = Router({ mergeParams: true });
 
@@ -36,6 +37,13 @@ router.post('/', async (req: TenantRequest, res: Response) => {
       return;
     }
 
+    if (menuItem.stock !== null) {
+      if (!checkStock(menuItem.id, item.quantity)) {
+        res.status(400).json({ error: `Insufficient stock for: ${menuItem.name}` });
+        return;
+      }
+    }
+
     orderItems.push({
       menuItemId: menuItem.id,
       name: menuItem.name,
@@ -46,8 +54,12 @@ router.post('/', async (req: TenantRequest, res: Response) => {
     total += menuItem.price * item.quantity;
   }
 
+  const orderId = generateId();
+
+  reserveStock(orderId, input.items);
+
   const newOrder: Order = {
-    id: generateId(),
+    id: orderId,
     restaurantId: req.tenant!.restaurantId,
     customerName: input.customerName,
     items: orderItems,
@@ -59,6 +71,8 @@ router.post('/', async (req: TenantRequest, res: Response) => {
   };
 
   const order = db.insertOrder(newOrder);
+
+  commitReservation(orderId);
 
   sendOrderConfirmation(order);
 

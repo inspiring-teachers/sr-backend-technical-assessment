@@ -1,6 +1,6 @@
 # Senior Backend Technical Assessment
 
-Welcome! This exercise evaluates your debugging and optimization skills through three focused challenges.
+Welcome! This exercise evaluates your debugging, optimization, and system design skills through three focused challenges.
 
 ## Getting Started
 
@@ -12,48 +12,67 @@ npm test         # Run all tests (they will fail initially)
 
 ---
 
-## Part 1: Warmup - "The Silent Failure" (10-15 min)
+## Part 1: Inventory Race Conditions (25-30 min)
 
 **Run:** `npm run test:part1`
 
-When an order is created, the `notificationSentAt` field should be set. But it's always `null`.
+### Warmup
 
-**File:** `src/routes/orders.ts`
+Before diving into the race conditions, there's a simpler bug to find. Order confirmation notifications aren't being sent properly.
 
-**Hint:** Think about async/await behavior.
+**Symptom:** The `notificationSentAt` field is never set on orders.
 
----
+**Files to examine:**
+- `src/routes/orders.ts` - Order creation flow
+- `src/services/notifications.ts` - Notification service
 
-## Part 2: Multi-tenant Architecture Discussion (10-15 min)
+### Main Challenge
 
-This is a discussion-based exercise. Review the existing tenant middleware in `src/middleware/tenant.ts` and be prepared to discuss:
+The restaurant's inventory system has multiple bugs causing race conditions and overselling. When concurrent orders arrive, stock isn't properly managed.
 
-1. **Walk me through how you'd implement tenant isolation in this system.**
-   - How would you ensure one tenant can never access another's data?
+**Symptoms:**
+- Orders succeed even when stock should be exhausted
+- Stock counts become inconsistent
+- Concurrent orders can oversell limited items
 
-2. **What are the tradeoffs between row-level security vs separate schemas vs separate databases?**
-   - Which would you recommend for this use case and why?
+**Files to examine:**
+- `src/services/inventory.ts` - Inventory management with caching
+- `src/routes/orders.ts` - Order creation flow
 
-3. **How would you handle a tenant trying to access another tenant's data?**
-   - What logging/alerting would you add?
-
-4. **What changes would be needed if we wanted to add tenant-specific feature flags?**
-   - How would you structure the configuration?
-
-5. **How would you approach tenant data migration or deletion?**
-   - What considerations are important for GDPR compliance?
-
-**Reference:** `src/middleware/tenant.ts`, `src/routes/*.ts`
+**Hint:** Think about the timing of async operations and what happens when multiple requests arrive simultaneously.
 
 ---
 
-## Part 3: Performance Optimization (15-20 min)
+## Part 2: Discussion Questions (15-20 min)
 
-**Run:** `npm run test:part3`
+These scenario-based questions assess your debugging approach and system design thinking. Be prepared to discuss your reasoning.
+
+### Q1: Debugging Race Conditions
+*"You deploy Part 1's fix but customers report occasional duplicate order confirmations. Walk me through debugging this from first report to root cause."*
+
+### Q2: Scaling Under Load
+*"The inventory system works correctly but latency spikes to 5+ seconds during flash sales. Describe your investigation approach and what architectural changes you'd consider."*
+
+### Q3: Production Incident
+*"It's 2 AM and you get paged: analytics is returning wrong revenue totals for some restaurants, but not others. What's your incident response process?"*
+
+### Q4: Design Challenge
+*"Product wants to add daily specials with dynamic pricing that updates mid-day. Active orders should keep their original price, but the menu should show new prices in real-time. How would you design this?"*
+
+### Q5: Code Review
+*"A junior engineer proposes adding `setTimeout(100)` after database writes 'to ensure data is persisted before reading.' How do you handle this code review?"*
+
+---
+
+## Bonus: Performance Optimization
+
+**Run:** `npm run test:bonus`
 
 The analytics endpoint must complete in under 500ms with 100 orders. Currently it's too slow.
 
 **File:** `src/routes/analytics.ts`
+
+**Hint:** Look for N+1 query patterns and redundant iterations.
 
 ---
 
@@ -72,7 +91,7 @@ All endpoints require `X-Tenant-ID` header.
 ## Testing
 
 ```bash
-npm run test:part1    # Part 1 only
-npm run test:part3    # Part 3 only
+npm run test:part1    # Part 1: Inventory race conditions
+npm run test:bonus    # Bonus: Performance optimization
 npm test              # All tests
 ```

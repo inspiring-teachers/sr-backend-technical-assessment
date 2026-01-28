@@ -4,18 +4,20 @@ import { app } from '../src/index.js';
 import { db } from '../src/db.js';
 
 /**
- * Part 3: Performance Optimization
+ * Part 2: Performance Optimization
  *
- * The analytics endpoint is slow due to N+1 queries and redundant iterations.
+ * The analytics endpoint is slow due to inefficient code patterns.
  * Optimize src/routes/analytics.ts to complete in under 500ms.
  *
  * Look for:
- * - Unnecessary database lookups in loops
- * - Simulated latency that can be removed
- * - Multiple iterations that can be combined
+ * - N+1 query pattern (database lookups inside loops)
+ * - Redundant iterations over the same data
+ * - Unnecessary data fetching
+ *
+ * Hint: The order items already contain the name and price data you need.
  */
 
-describe('Part 3: Performance Optimization', () => {
+describe('Part 2: Performance Optimization', () => {
   beforeEach(() => {
     db.reset();
 
@@ -35,6 +37,7 @@ describe('Part 3: Performance Optimization', () => {
         price: 10.00,
         category: 'Main',
         available: true,
+        stock: null,
         createdAt: new Date(),
         updatedAt: new Date()
       });

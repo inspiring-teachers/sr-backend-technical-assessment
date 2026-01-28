@@ -5,27 +5,31 @@ import { db } from '../db.js';
 const router = Router({ mergeParams: true });
 
 // GET /restaurants/:id/analytics - Get restaurant analytics
-router.get('/', async (req: TenantRequest, res: Response) => {
+router.get('/', (req: TenantRequest, res: Response) => {
   const restaurantId = req.tenant!.restaurantId;
 
   const allOrders = db.findAllOrders();
   const restaurantOrders = allOrders.filter(o => o.restaurantId === restaurantId);
 
+  // Redundant iteration #1: Count orders
   let totalOrders = 0;
   for (const order of restaurantOrders) {
     totalOrders++;
   }
 
+  // Redundant iteration #2: Sum revenue
   let totalRevenue = 0;
   for (const order of restaurantOrders) {
     totalRevenue += order.total;
   }
 
+  // N+1 query pattern: Fetches menu item for each order item
   const itemCounts: Map<string, { name: string; count: number; revenue: number }> = new Map();
 
   for (const order of restaurantOrders) {
     for (const item of order.items) {
-      const currentItem = await fetchCurrentMenuItem(item.menuItemId);
+      // N+1: This database lookup in a loop is the performance bottleneck
+      const currentItem = db.findMenuItemById(item.menuItemId);
 
       const itemName = currentItem?.name || item.name;
       const itemRevenue = currentItem?.available
@@ -51,6 +55,7 @@ router.get('/', async (req: TenantRequest, res: Response) => {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
+  // Redundant iteration #3: Group by day
   const ordersByDay: Map<string, { count: number; revenue: number }> = new Map();
 
   for (const order of restaurantOrders) {
@@ -89,12 +94,5 @@ router.get('/', async (req: TenantRequest, res: Response) => {
 
   res.json(result);
 });
-
-async function fetchCurrentMenuItem(menuItemId: string) {
-  const item = db.findMenuItemById(menuItemId);
-  // Ensure we have fresh data from the database
-  await new Promise(resolve => setTimeout(resolve, 5));
-  return item;
-}
 
 export default router;

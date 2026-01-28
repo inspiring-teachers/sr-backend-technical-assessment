@@ -33,6 +33,7 @@ router.post('/', (req: TenantRequest, res: Response) => {
     price: input.price,
     category: input.category,
     available: input.available ?? true,
+    stock: input.stock ?? null,
     createdAt: new Date(),
     updatedAt: new Date()
   };

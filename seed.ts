@@ -38,6 +38,7 @@ export function seedDatabase(): void {
       price: 12.99,
       category: 'Pizza',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01')
     },
@@ -49,6 +50,7 @@ export function seedDatabase(): void {
       price: 14.99,
       category: 'Pizza',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01')
     },
@@ -60,6 +62,7 @@ export function seedDatabase(): void {
       price: 4.99,
       category: 'Sides',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01')
     },
@@ -71,6 +74,7 @@ export function seedDatabase(): void {
       price: 8.99,
       category: 'Salads',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-01'),
       updatedAt: new Date('2024-01-01')
     }
@@ -86,6 +90,7 @@ export function seedDatabase(): void {
       price: 10.99,
       category: 'Burgers',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-15')
     },
@@ -97,6 +102,7 @@ export function seedDatabase(): void {
       price: 12.99,
       category: 'Burgers',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-15')
     },
@@ -108,6 +114,7 @@ export function seedDatabase(): void {
       price: 4.99,
       category: 'Sides',
       available: true,
+      stock: null,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-15')
     },
@@ -119,6 +126,7 @@ export function seedDatabase(): void {
       price: 5.99,
       category: 'Sides',
       available: false, // Unavailable for testing
+      stock: null,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-15')
     }
@@ -134,6 +142,7 @@ export function seedDatabase(): void {
       price: 8.99,
       category: 'Rolls',
       available: true,
+      stock: null,
       createdAt: new Date('2024-02-01'),
       updatedAt: new Date('2024-02-01')
     },
@@ -145,6 +154,7 @@ export function seedDatabase(): void {
       price: 6.99,
       category: 'Nigiri',
       available: true,
+      stock: null,
       createdAt: new Date('2024-02-01'),
       updatedAt: new Date('2024-02-01')
     }

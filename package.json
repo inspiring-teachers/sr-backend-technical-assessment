@@ -8,8 +8,8 @@
     "start": "tsx src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:part1": "vitest run tests/warmup.test.ts",
-    "test:part3": "vitest run tests/performance.test.ts",
+    "test:part1": "vitest run tests/inventory-race.test.ts",
+    "test:bonus": "vitest run tests/performance.test.ts",
     "seed": "tsx seed.ts"
   },
   "dependencies": {

@@ -31,6 +31,7 @@ describe('Part 1: Warmup - Order Notifications', () => {
       price: 9.99,
       category: 'Burgers',
       available: true,
+      stock: null,
       createdAt: new Date(),
       updatedAt: new Date()
     });
